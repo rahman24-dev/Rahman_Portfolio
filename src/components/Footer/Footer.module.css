@@ -1,0 +1,120 @@
+.footer {
+  background-color: #1a1a1a;
+  color: #fff;
+  padding: 2rem 10%;
+  text-align: center;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.container p {
+  margin: 0;
+  color: #aaa;
+  font-size: 0.95rem;
+}
+
+.socialLinks {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.socialLinks a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.socialLinks a:hover {
+  color: #007bff;
+}
+
+.socialLinks {
+  display: flex;
+  gap: 1.5rem;
+  /* Centers the icons perfectly if they are different heights */
+  align-items: center; 
+}
+
+.socialLinks a {
+  color: #fff;
+  font-size: 1.8rem; 
+  display: flex;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.socialLinks a:hover {
+  color: #007bff;
+  transform: translateY(-5px); 
+}
+.footer {
+  background-color: #1a1a1a;
+  color: #fff;
+  padding: 3rem 10% 2rem; /* Added more padding to the top */
+  position: relative; /* Needed for the absolute positioning of the Top Button */
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* Back to Top Button */
+.topBtn {
+  background-color: #009C1D;
+  color: white;
+  border: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: absolute;
+  top: -22px; 
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.topBtn:hover {
+  background-color: #006613;
+  transform: translateY(-5px);
+}
+
+/* Text and Built-with Styles */
+.footerText {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.footerText p {
+  margin: 0 0 0.5rem 0;
+  color: #aaa;
+  font-size: 0.95rem;
+}
+
+.techStack {
+  font-size: 0.85rem !important; 
+  color: #777 !important;
+}
+
+.techStack span {
+  color: #007bff; 
+  font-weight: 600;
+}
+
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 2rem 1.5rem;
+  }
+}
