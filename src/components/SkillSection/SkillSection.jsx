@@ -1,56 +1,123 @@
-import styles from './SkillSection.module.css';
-import { skillsData } from '../../data/skills';
+import React from "react";
+import "./Skills.css";
 
-export default function SkillSection() {
-    // Separate the data dynamically based on your existing structure
-    const skills = skillsData.filter(category => category.title !== 'Tools & Workflow');
-    const tools = skillsData.filter(category => category.title === 'Tools & Workflow');
+const icons = {
+  html5: (
+    <svg viewBox="0 0 24 24" className="skill-icon" fill="#E44D26">
+      <path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438L1.5 0zm7.031 9.75l-.232-2.607 11.51.001.234-2.578H5.324l.699 7.821h9.98l-.351 3.869-3.155.849-3.147-.849-.203-2.264H6.716l.402 4.453 5.351 1.502-.005.014 5.354-1.502.723-8.108H8.531z"/>
+    </svg>
+  ),
+  css3: (
+    <svg viewBox="0 0 24 24" className="skill-icon" fill="#1572B6">
+      <path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.565-2.438L1.5 0zm17.09 4.413L5.41 4.41l.213 2.622 10.125.002-.255 2.716h-6.64l.24 2.573h6.182l-.366 3.523-2.91.804-2.956-.81-.188-2.11h-2.61l.29 3.855L12 19.288l5.373-1.53L18.59 4.414z"/>
+    </svg>
+  ),
+  javascript: (
+    <svg viewBox="0 0 24 24" className="skill-icon" fill="#F7DF1E">
+      <path d="M0 0h24v24H0V0zm22.034 18.276c-.175-1.095-.888-2.015-3.003-2.873-.736-.345-1.554-.585-1.797-1.14-.091-.33-.105-.51-.046-.705.15-.646.915-.84 1.516-.66.39.12.75.42.976.9 1.034-.676 1.034-.676 1.755-1.125-.27-.42-.404-.601-.586-.78-.63-.705-1.484-1.065-2.868-1.034l-.705.089c-.676.165-1.32.525-1.71 1.005-1.14 1.291-.811 3.541.569 4.471 1.365 1.02 3.361 1.244 3.616 2.205.24 1.17-.87 1.545-1.966 1.41-.811-.18-1.26-.586-1.755-1.336l-1.83 1.051c.21.48.45.689.81 1.109 1.74 1.756 6.09 1.666 6.871-1.004.029-.09.24-.705.074-1.65l.046.067zm-8.983-7.245h-2.248c0 1.938-.009 3.864-.009 5.805 0 1.232.063 2.363-.138 2.711-.33.689-1.18.601-1.566.48-.396-.196-.597-.466-.83-.855-.063-.105-.11-.196-.127-.196l-1.825 1.125c.305.63.75 1.176 1.324 1.53.855.51 2.004.675 3.207.405.783-.226 1.458-.691 1.811-1.411.51-.93.402-2.07.397-3.346.012-2.054 0-4.109 0-6.178l.004-.07z"/>
+    </svg>
+  ),
+  react: (
+    <svg viewBox="0 0 24 24" className="skill-icon" fill="#61DAFB">
+      <path d="M12 10.11c1.03 0 1.87.84 1.87 1.89 0 1-.84 1.85-1.87 1.85-1.03 0-1.87-.85-1.87-1.85 0-1.05.84-1.89 1.87-1.89M7.37 20c.63.38 2.01-.2 3.6-1.7-.52-.59-1.03-1.23-1.51-1.9a22.7 22.7 0 0 1-2.4-.36c-.51 2.14-.32 3.61.31 3.96m.71-5.74l-.29-.51c-.11.29-.22.58-.29.86.27.06.57.11.88.16l-.3-.51m6.54-.76l.81-1.5-.81-1.5c-.3-.53-.62-1-.91-1.47C13.17 9 12.6 9 12 9c-.6 0-1.17 0-1.71.03-.29.47-.61.94-.91 1.47L8.57 12l.81 1.5c.3.53.62 1 .91 1.47.54.03 1.11.03 1.71.03.6 0 1.17 0 1.71-.03.29-.47.61-.94.91-1.47M12 6.78c-.19.22-.39.45-.59.72h1.18c-.2-.27-.4-.5-.59-.72M12 17.22c.19-.22.39-.45.59-.72h-1.18c.2.27.4.5.59.72M16.62 4c-.62-.38-2 .2-3.59 1.7.52.59 1.03 1.23 1.51 1.9.82.08 1.63.2 2.4.36.51-2.14.32-3.61-.32-3.96m-.7 5.74l.29.51c.11-.29.22-.58.29-.86-.27-.06-.57-.11-.88-.16l.3.51m1.45-7.05c1.47.84 1.63 3.05 1.01 5.63 2.54.75 4.37 1.99 4.37 3.68 0 1.69-1.83 2.93-4.37 3.68.62 2.58.46 4.79-1.01 5.63-1.46.84-3.45-.12-5.37-1.95-1.92 1.83-3.91 2.79-5.38 1.95-1.46-.84-1.62-3.05-1-5.63-2.54-.75-4.37-1.99-4.37-3.68 0-1.69 1.83-2.93 4.37-3.68-.62-2.58-.46-4.79 1-5.63 1.47-.84 3.46.12 5.38 1.95 1.92-1.83 3.91-2.79 5.37-1.95M17.08 12c.34.75.64 1.5.89 2.22 2.1-.63 3.28-1.53 3.28-2.22 0-.69-1.18-1.59-3.28-2.22-.25.72-.55 1.47-.89 2.22M6.92 12c-.34-.75-.64-1.5-.89-2.22-2.1.63-3.28 1.53-3.28 2.22 0 .69 1.18 1.59 3.28 2.22.25-.72.55-1.47.89-2.22m9-6.13c-.75-.25-1.5-.55-2.22-.89-.63 2.1-1.53 3.28-2.22 3.28-.69 0-1.59-1.18-2.22-3.28-.72.34-1.47.64-2.22.89.25.75.55 1.5.89 2.22-2.1.63-3.28 1.53-3.28 2.22 0 .69 1.18 1.59 3.28 2.22-.34.72-.64 1.47-.89 2.22.75.25 1.5.55 2.22.89.63-2.1 1.53-3.28 2.22-3.28.69 0 1.59 1.18 2.22 3.28.72-.34 1.47-.64 2.22-.89-.25-.75-.55-1.5-.89-2.22 2.1-.63 3.28-1.53 3.28-2.22 0-.69-1.18-1.59-3.28-2.22.34-.72.64-1.47.89-2.22z"/>
+    </svg>
+  ),
+  nodejs: (
+    <svg viewBox="0 0 24 24" className="skill-icon" fill="#5FA04E">
+      <path d="M12 21.985c-.275 0-.532-.074-.772-.202l-2.439-1.448c-.365-.203-.182-.277-.072-.314.496-.165.588-.201 1.101-.493.056-.037.129-.02.185.017l1.87 1.12c.074.036.166.036.221 0l7.319-4.237c.074-.036.11-.11.11-.202V7.768c0-.091-.036-.165-.11-.201l-7.319-4.219c-.073-.037-.165-.037-.221 0L4.552 7.567c-.073.036-.11.129-.11.201v8.457c0 .073.037.165.11.201l2.003 1.157c1.085.548 1.762-.095 1.762-.735V8.502c0-.11.091-.221.22-.221h.936c.108 0 .22.092.22.221v8.347c0 1.449-.788 2.294-2.163 2.294-.42 0-.751 0-1.68-.46l-1.925-1.099a1.55 1.55 0 0 1-.771-1.34V7.786c0-.55.293-1.064.771-1.339l7.316-4.237a1.637 1.637 0 0 1 1.541 0l7.317 4.237c.478.276.771.789.771 1.339v8.458c0 .549-.293 1.063-.771 1.34l-7.317 4.236c-.241.11-.516.165-.773.165zm2.256-5.816c-3.201 0-3.87-1.468-3.87-2.714 0-.11.092-.221.221-.221h.955c.11 0 .202.073.202.184.147.971.568 1.449 2.512 1.449 1.542 0 2.202-.35 2.202-1.175 0-.477-.184-.828-2.586-1.066-1.999-.2-3.246-.643-3.246-2.238 0-1.485 1.247-2.366 3.339-2.366 2.347 0 3.503.809 3.649 2.568a.226.226 0 0 1-.221.239h-.955a.207.207 0 0 1-.202-.164c-.221-1.02-.789-1.34-2.291-1.34-1.688 0-1.883.587-1.883.936 0 .55.257.72 2.512.99 2.238.276 3.319.665 3.319 2.288-.019 1.596-1.339 2.581-3.657 2.581v-.001z"/>
+    </svg>
+  ),
+  express: (
+    <svg viewBox="0 0 24 24" className="skill-icon" fill="#000000">
+      <path d="M24 18.588a1.529 1.529 0 0 1-1.895-.72l-3.45-4.771-.5-.667-4.003 5.444a1.466 1.466 0 0 1-1.802.708l5.158-6.92-4.798-6.251a1.595 1.595 0 0 1 1.9.666l3.576 4.83 3.596-4.81a1.435 1.435 0 0 1 1.788-.668L21.708 7.8l-2.522 3.31a.643.643 0 0 0 0 .898l4.804 6.556.01.024zM.002 11.576l.42-2.075c1.154-4.103 5.858-5.83 9.09-3.294 1.895 1.487 2.238 3.597 2.15 5.973H1.436c-.061 3.101 2.021 4.892 4.796 4.03a3.4 3.4 0 0 0 2.028-1.999c.36-.775 1.15-.984 1.945-.75.325.1.325.35.278.63a4.9 4.9 0 0 1-4.494 3.635C2.4 18.13.14 15.723.001 12.056a5 5 0 0 1 0-.48zm1.443-1.049h8.474c-.06-2.522-1.605-4.29-3.926-4.324-2.531-.037-4.216 1.601-4.548 4.324z"/>
+    </svg>
+  ),
+  api: (
+    <svg viewBox="0 0 24 24" className="skill-icon" fill="#22c55e">
+      <path d="M13 2 3 14h7v8l10-12h-7z"/>
+    </svg>
+  ),
+  mongodb: (
+    <svg viewBox="0 0 24 24" className="skill-icon" fill="#47A248">
+      <path d="M17.193 9.555c-1.264-5.58-4.252-7.414-4.573-8.115-.28-.394-.53-.954-.735-1.44-.036.495-.055.685-.523 1.184-.723.566-4.438 3.682-4.74 10.02-.282 5.912 4.27 9.435 4.888 9.884l.07.05A73.49 73.49 0 0111.91 24h.481c.114-1.032.284-2.056.51-3.07.417-.296.604-.463.85-.693a11.342 11.342 0 003.639-8.464c.01-.814-.103-1.662-.197-2.218zm-5.336 8.195s0-8.291.275-8.29c.213 0 .49 10.695.49 10.695-.381-.045-.765-1.76-.765-2.405z"/>
+    </svg>
+  ),
+  vercel: (
+    <svg viewBox="0 0 24 24" className="skill-icon" fill="#000000">
+      <path d="M12 1L24 21H0L12 1z"/>
+    </svg>
+  ),
+  render: (
+    <img
+      src="https://dl.svgcdn.com/svg/simple-icons/render.svg"
+      alt="Render logo"
+      className="skill-icon"
+    />
+  ),
+  firebase: (
+    <svg viewBox="0 0 24 24" className="skill-icon" fill="#FFCA28">
+      <path d="M3.89 15.673L6.255.461A.542.542 0 017.27.288l2.543 4.771zm16.794 3.692l-2.25-14a.54.54 0 00-.919-.295L3.316 19.365l7.856 4.427a1.621 1.621 0 001.588 0zm-6.789-10.4l-2.108-4.062a.379.379 0 00-.676 0L3.53 17.984z"/>
+    </svg>
+  ),
+};
 
-    return (
-        <section>
-            <div id="skills" className={styles.skillsSection}>
-                <div className={styles.container}>
-                    
-                    {/* Header with Logo */}
-                    <div className={styles.header}>
-                        <svg className={styles.logo} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                            <polyline points="2 17 12 22 22 17"></polyline>
-                            <polyline points="2 12 12 17 22 12"></polyline>
-                        </svg>
-                        <h2 className={styles.sectionTitle}>Technical Arsenal</h2>
-                    </div>
-                    <div className={styles.underline}></div>
+const skillGroups = [
+  {
+    title: "Frontend",
+    skills: [
+      { name: "HTML5", icon: icons.html5 },
+      { name: "CSS3", icon: icons.css3 },
+      { name: "JavaScript", icon: icons.javascript },
+      { name: "React.js", icon: icons.react },
+    ],
+  },
+  {
+    title: "Backend",
+    skills: [
+      { name: "Node.js", icon: icons.nodejs },
+      { name: "Express.js", icon: icons.express },
+      { name: "REST API", icon: icons.api },
+    ],
+  },
+  {
+    title: "Database & Deployment",
+    skills: [
+      { name: "MongoDB", icon: icons.mongodb },
+      { name: "Vercel", icon: icons.vercel },
+      { name: "Render", icon: icons.render },
+      { name: "Firebase Hosting", icon: icons.firebase },
+    ],
+  },
+];
 
-                    {/* Connectivity Timeline */}
-                    <div className={styles.connectivityTimeline}>
-                        
-                        {/* Skills Node */}
-                        <div className={styles.timelineNode}>
-                            <h3 className={styles.nodeTitle}>Skills</h3>
-                            <div className={styles.grid}>
-                                {skills.map((category, index) => (
-                                    <div 
-                                        key={index}
-                                        className={styles.card}
-                                        style={{ animationDelay: `${index * 0.2}s` }}>
-                                        <h3 className={styles.cardTitle}>
-                                            <span className={styles.icon}>{category.icon}</span> {category.title}
-                                        </h3>
-                                        <ul className={styles.skillList}>
-                                            {category.skills.map((skill, skillIndex) => (
-                                                <li key={skillIndex} className={styles.skillItem}>
-                                                    <span className={styles.bullet}>▹</span> {skill}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+export default function Skills() {
+  return (
+    <section className="skills-section">
+      <div className="skills-container">
+        <h2 className="skills-heading">Skills</h2>
+        <div className="underline"></div>
+        <p className="skills-subheading">Technologies I work with</p>
+
+        <div className="skills-groups">
+          {skillGroups.map((group) => (
+            <div key={group.title} className="skills-group">
+              <h3 className="skills-group-title">{group.title}</h3>
+              <div className="skills-grid">
+                {group.skills.map((skill, i) => (
+                  <div
+                    key={skill.name}
+                    className="skill-card"
+                    style={{ animationDelay: `${i * 70}ms` }}
+                  >
+                    <div className="skill-icon-wrap">{skill.icon}</div>
+                    <span className="skill-name">{skill.name}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-        </section>
-    );
+          ))}
+        </div>
+      </div>
+    </section>
+  );
 }

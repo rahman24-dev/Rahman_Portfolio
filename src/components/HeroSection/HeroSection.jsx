@@ -27,7 +27,7 @@ export default function HeroSection() {
         </p>
 
         <div className={styles.buttonGroup}>
-          <a href="#project" className={styles.primaryBtn}>
+          <a href="#projects" className={styles.primaryBtn}>
             View My Work
           </a>
           <a href="#contact" className={styles.secondaryBtn}>
